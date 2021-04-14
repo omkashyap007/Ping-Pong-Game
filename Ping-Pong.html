@@ -1,0 +1,127 @@
+<!doctype html>
+<html>
+<head>
+    <style>
+    </style>
+</head>
+
+<body>
+    <canvas id="can"></canvas>
+    <script>
+
+        var W = window.innerWidth -20 ;
+        var H = window.innerHeight -20;
+        var canvas = document.getElementById("can");
+        var ctx = canvas.getContext("2d");
+        canvas.style.backgroundColor = "black";
+        canvas.width = W;
+        canvas.height = H;
+        var x = Math.floor(Math.random() * W)
+        var y = Math.floor(Math.random() * H)
+        radius = 30 ;
+        dx = 10
+        dy = 10
+        var player1Score = 0 ;
+        var player2Score = 0 ;
+        var paddleX1 = 10;
+        var paddleY1 = H / 2 - 100
+        var paddleX2 = W - 30
+        var paddleY2 = H / 2 - 100
+        const paddleWidth = 20
+        const paddleHeight = 200
+        const distCanvas = 20
+
+        setInterval(function() {
+            draw();
+            move();
+        }, 1000 / 60);
+
+        function calculateMousePos(evt) {
+            var rect = canvas.getBoundingClientRect();
+            var root = document.documentElement;
+            var mouseX = evt.clientX - rect.left - root.scrollLeft;
+            var mouseY = evt.clientY - rect.top - root.scrollTop;
+
+            return {
+                x: mouseX,
+                y: mouseY
+            };
+        }
+
+        canvas.addEventListener("mousemove", function (evt) {
+            var mousePos = calculateMousePos(evt);
+            if(x >= W/2){
+            paddleY2 = mousePos.y - paddleHeight / 2;
+            }
+            if(x< W/2){
+                paddleY1 = mousePos.y - paddleHeight / 2;
+            }
+        
+        });
+
+        function resetBall() {
+            x = W / 2 - radius;
+            y = H / 2 - radius;
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, W, H)
+            ctx.fillStyle = "white"
+            ctx.fillRect(W / 2 - 1, 0, 2, H)
+            ctx.fillStyle = "red";
+            ctx.beginPath();
+            ctx.arc(x, y, radius, 0, Math.PI * 2, false);
+            ctx.fill();
+            ctx.fillStyle = "yellow";
+            ctx.font="bold 30px florence,cursive";
+            ctx.fillText(player1Score , 100 , 100);
+            ctx.fillText(player2Score , W - 100 , 100);
+            ctx.fillStyle = "white";
+            ctx.fillRect(paddleX1, paddleY1, paddleWidth, paddleHeight)
+            ctx.fillRect(paddleX2, paddleY2, paddleWidth, paddleHeight)
+
+        }
+        if(player1Score >= 5 || player2Score >=5 ){
+            dx = dy = 15
+        }
+
+
+        function move() {
+
+            if (x <= 0 + radius + distCanvas + paddleWidth) {
+                if (y > paddleY1 && y < paddleY1 + paddleHeight) {
+                    dx = -dx
+                }
+            }
+            if(x <= 0 ){
+                resetBall();
+                player2Score++ ;
+            }
+
+            if (y + radius <= 0) {
+                dy = -dy
+            }
+
+            if (y + radius >= H) {
+                dy = -dy
+            }
+
+            if (x >= W - paddleWidth - radius - distCanvas) {
+                if (y > paddleY2 && y < paddleY2 + paddleHeight) {
+                    dx = -dx
+                }
+            }
+        
+            if(x >= W ){
+                resetBall();
+                player1Score++;
+            }
+            x += dx
+            y += dy
+        }
+    </script>
+</body>
+
+</html>
+
+# just copy or download the program and enloy the game .
